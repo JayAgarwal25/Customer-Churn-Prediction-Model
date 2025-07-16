@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Churn Predictor</title>
+    
+    <!-- Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter for clean typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* A light gray background */
+        }
+        /* Custom styles for range slider thumb */
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #3b82f6; /* Blue-500 */
+            cursor: pointer;
+            border-radius: 50%;
+            margin-top: -6px; /* Adjust thumb position */
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #3b82f6;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Main Container -->
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-4xl">
+
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800">Customer Churn Predictor</h1>
+            <p class="text-lg text-gray-600 mt-2">Enter customer details to predict churn probability.</p>
+        </header>
+
+        <!-- Form Card -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
+            <!-- The form now submits data via POST -->
+            <form id="churnForm" method="POST">
+                
+                <!-- Section 1: Account Information -->
+                <fieldset class="mb-8">
+                    <legend class="text-xl font-semibold text-gray-700 border-b-2 border-blue-500 pb-2 mb-6 w-full">Account Information</legend>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="gender" class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                            <select id="gender" name="gender" class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                <option>Male</option>
+                                <option>Female</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="Partner" class="block text-sm font-medium text-gray-700 mb-1">Has a Partner?</label>
+                            <select id="Partner" name="Partner" class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="Dependents" class="block text-sm font-medium text-gray-700 mb-1">Has Dependents?</label>
+                            <select id="Dependents" name="Dependents" class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="SeniorCitizen" class="block text-sm font-medium text-gray-700 mb-1">Senior Citizen</label>
+                            <select id="SeniorCitizen" name="SeniorCitizen" class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Section 2: Services -->
+                <fieldset class="mb-8">
+                    <legend class="text-xl font-semibold text-gray-700 border-b-2 border-blue-500 pb-2 mb-6 w-full">Subscribed Services</legend>
+                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Service Selectors -->
+                        <div>
+                            <label for="PhoneService" class="block text-sm font-medium text-gray-700 mb-1">Phone Service</label>
+                            <select id="PhoneService" name="PhoneService" class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="MultipleLines" class="block text-sm font-medium text-gray-700 mb-1">Multiple Lines</label>
+                            <select id="MultipleLines" name="MultipleLines" class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                <option>Yes</option>
+                                <option>No</option>
+                                <option>No phone service</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="InternetService" class="block text-sm font-medium text-gray-700 mb-1">Internet Service</label>
+                            <select id="InternetService" name="InternetService" class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                <option>DSL</option>
+                                <option>Fiber optic</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="OnlineSecurity" class="block text-sm font-medium text-gray-700 mb-1">Online Security</label>
+                            <select id="OnlineSecurity" name="OnlineSecurity" class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                <option>Yes</option>
+                                <option>No</option>
+                                <option>No internet service</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="OnlineBackup" class="block text-sm font-medium text-gray-700 mb-1">Online Backup</label>
+                            <select id="OnlineBackup" name="OnlineBackup" class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                <option>Yes</option>
+                                <option>No</option>
+                                <option>No internet service</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="DeviceProtection" class="block text-sm font-medium text-gray-700 mb-1">Device Protection</label>
+                            <select id="DeviceProtection" name="DeviceProtection" class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                <option>Yes</option>
+                                <option>No</option>
+                                <option>No internet service</option>
+                            </select>
+                        </div>
+                         <div>
+                            <label for="TechSupport" class="block text-sm font-medium text-gray-700 mb-1">Tech Support</label>
+                            <select id="TechSupport" name="TechSupport" class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                <option>Yes</option>
+                                <option>No</option>
+                                <option>No internet service</option>
+                            </select>
+                        </div>
+                         <div>
+                            <label for="StreamingTV" class="block text-sm font-medium text-gray-700 mb-1">Streaming TV</label>
+                            <select id="StreamingTV" name="StreamingTV" class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                <option>Yes</option>
+                                <option>No</option>
+                                <option>No internet service</option>
+                            </select>
+                        </div>
+                         <div>
+                            <label for="StreamingMovies" class="block text-sm font-medium text-gray-700 mb-1">Streaming Movies</label>
+                            <select id="StreamingMovies" name="StreamingMovies" class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                <option>Yes</option>
+                                <option>No</option>
+                                <option>No internet service</option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Section 3: Contract and Billing -->
+                <fieldset>
+                    <legend class="text-xl font-semibold text-gray-700 border-b-2 border-blue-500 pb-2 mb-6 w-full">Contract & Billing</legend>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="Contract" class="block text-sm font-medium text-gray-700 mb-1">Contract</label>
+                            <select id="Contract" name="Contract" class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                <option>Month-to-month</option>
+                                <option>One year</option>
+                                <option>Two year</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="PaperlessBilling" class="block text-sm font-medium text-gray-700 mb-1">Paperless Billing</label>
+                            <select id="PaperlessBilling" name="PaperlessBilling" class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-2">
+                             <label for="PaymentMethod" class="block text-sm font-medium text-gray-700 mb-1">Payment Method</label>
+                            <select id="PaymentMethod" name="PaymentMethod" class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                <option>Electronic check</option>
+                                <option>Mailed check</option>
+                                <option>Bank transfer (automatic)</option>
+                                <option>Credit card (automatic)</option>
+                            </select>
+                        </div>
+                        <!-- Interactive Sliders for Numerical Inputs -->
+                        <div class="md:col-span-2">
+                            <label for="tenure" class="block text-sm font-medium text-gray-700 mb-1">Tenure (Months): <span id="tenureValue" class="font-bold text-blue-600">36</span></label>
+                            <input type="range" id="tenure" name="tenure" min="0" max="72" value="36" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="MonthlyCharges" class="block text-sm font-medium text-gray-700 mb-1">Monthly Charges ($): <span id="monthlyChargesValue" class="font-bold text-blue-600">70.00</span></label>
+                            <input type="range" id="MonthlyCharges" name="MonthlyCharges" min="18" max="120" step="0.01" value="70" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                        </div>
+                         <div class="md:col-span-2">
+                            <label for="TotalCharges" class="block text-sm font-medium text-gray-700 mb-1">Total Charges ($): <span id="totalChargesValue" class="font-bold text-blue-600">2500.00</span></label>
+                            <input type="range" id="TotalCharges" name="TotalCharges" min="18" max="9000" step="0.01" value="2500" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Submit Button -->
+                <div class="mt-8 text-center">
+                    <button type="submit" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-12 rounded-lg transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                        Predict Churn
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Prediction Result Area (Rendered by Backend) -->
+        <div class="mt-8">
+            {% if prediction %}
+            <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                <h3 class="text-2xl font-semibold text-gray-800">Prediction: {{ prediction }}</h3>
+                <p class="text-lg text-gray-600 mt-2">Probability: {{ probability | round(2) }}</p>
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <!-- JavaScript for slider interactivity -->
+    <script>
+        // --- Interactive Slider Value Displays ---
+        const tenureSlider = document.getElementById('tenure');
+        const tenureValue = document.getElementById('tenureValue');
+        tenureSlider.addEventListener('input', () => {
+            tenureValue.textContent = tenureSlider.value;
+        });
+
+        const monthlyChargesSlider = document.getElementById('MonthlyCharges');
+        const monthlyChargesValue = document.getElementById('monthlyChargesValue');
+        monthlyChargesSlider.addEventListener('input', () => {
+            monthlyChargesValue.textContent = parseFloat(monthlyChargesSlider.value).toFixed(2);
+        });
+
+        const totalChargesSlider = document.getElementById('TotalCharges');
+        const totalChargesValue = document.getElementById('totalChargesValue');
+        totalChargesSlider.addEventListener('input', () => {
+            totalChargesValue.textContent = parseFloat(totalChargesSlider.value).toFixed(2);
+        });
+    </script>
+
+</body>
+</html>
